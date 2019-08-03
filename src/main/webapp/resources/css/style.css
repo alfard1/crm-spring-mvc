@@ -1,0 +1,75 @@
+html, 
+body{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+
+.content {
+}
+
+.add-object {
+	margin: auto;
+	max-width: 1200px;	
+}
+
+input[type=button]{
+	margin-left:10px;
+	margin-top:20px;
+	margin-bottom:10px;
+}
+
+.main-table {
+}
+
+.main-table table {
+	margin: auto;
+	max-width: 1200px;	
+}
+
+.footer {
+   	position: fixed;
+   	left: 0;
+   	bottom: 0;
+  	width: 100%;
+}
+
+.legend-with-padding {
+	padding-bottom: 30px;
+}
+
+.legend-background {
+	background: #0000000d;
+	margin-top: 40px; 
+}
+
+.legend {
+	padding-left: 40px;
+}
+
+.legend p {
+	padding-top: 20px;
+	margin-bottom: 4px;
+	font-size: 12px;
+}
+
+.legend ul {	
+	padding: 0px 10px 20px 10px;
+	font-size: 12px;
+}
+
+.legend li {
+	margin-left: 10px;
+	font-size: 12px;
+}
+
+.navbar-text {
+	padding-right: 1rem;
+}
+
+error {
+	color:red
+}
+
+.error {
+	color:red
+}
+
