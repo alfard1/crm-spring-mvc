@@ -11,8 +11,6 @@ import javax.validation.constraints.Size;
 
 import crm.validation.ValidEmail;
 
-//1st comment
-
 @Entity
 @Table(name="customer")
 public class Customer {
@@ -39,7 +37,6 @@ public class Customer {
 	private String email;
 	
 	public Customer() {
-		
 	}
 
 	public int getId() {
@@ -78,10 +75,4 @@ public class Customer {
 	public String toString() {
 		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
-		
 }
-
-
-
-
-

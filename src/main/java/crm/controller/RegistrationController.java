@@ -38,7 +38,6 @@ public class RegistrationController {
 	public String showMyLoginPage(Model theModel) {
 		theModel.addAttribute("crmUser", new CrmUser());
 		return "registration-form";
-		
 	}
 
 	@PostMapping("/processRegistrationForm")
@@ -55,8 +54,7 @@ public class RegistrationController {
 			logger.warning("User name/password can not be empty.");		
 			return "registration-form";	
 		}
-		
-		
+
 		// check the database if user already exists
         crm.entity.User existing = userService.findByUserName(userName);
         System.out.println("### >>>> existing = " + existing);
@@ -66,14 +64,11 @@ public class RegistrationController {
 			logger.warning("User name already exists.");
         	return "registration-form";
         }
-		
-	
+
 		// create user account    
         userService.save(theCrmUser);
         
         logger.info("Successfully created user: " + userName);     
         return "registration-confirmation";		
 	}
-
-
 }

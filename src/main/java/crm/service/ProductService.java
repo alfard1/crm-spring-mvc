@@ -15,5 +15,4 @@ public interface ProductService {
 	public void deleteProduct(int theId);
 	
 	public List<Product> findProducts(String tempProductName);
-	
 }

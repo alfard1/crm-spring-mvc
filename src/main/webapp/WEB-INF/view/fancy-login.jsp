@@ -108,13 +108,9 @@
 							   value="${_csrf.token}" />
 						
 					</form>
-
 				</div>
-				
 			</div>
-
 		</div>
-
 	</div>
 
 </body>

@@ -1,6 +1,5 @@
 package crm.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,9 +38,6 @@ import crm.service.UserService;
 @RequestMapping("/comments")
 public class CommentController {
 	
-	//private Map<String, String> allProducts;
-	
-
 	// add an initbinder to remove all whitespaces from strings coming via controller
 	// from beginning and end of the string
 	@InitBinder
@@ -62,8 +58,7 @@ public class CommentController {
 		Date updated = new Date();
 	    return updated; 
 	}
-	
-	
+
 	// need to inject our services we need for Comments details
 	@Autowired
 	private CommentService commentService;
@@ -97,8 +92,7 @@ public class CommentController {
 		//System.out.println("Map<String,String> productNamesList = " + productNamesList);
 		return productNamesList;		
 	}
-	
-	
+
 	@GetMapping("/list")
 	public String listComments(Model theModel) {
 		
@@ -123,10 +117,7 @@ public class CommentController {
 	}
 	
 	@GetMapping("/showFormForAdd")
-	public String showFormForAdd(
-			@ModelAttribute("comment") Comment theComment,
-			Model theModel) {
-
+	public String showFormForAdd(@ModelAttribute("comment") Comment theComment, Model theModel) {
 
 		theModel.addAttribute("comment", new Comment());
 		theModel.addAttribute("product", new Product());
@@ -211,80 +202,51 @@ public class CommentController {
 	}
 
 	@GetMapping("/showFormForUpdate")
-	public String showFormForUpdate(
-			@RequestParam("commentId") int theId,
-			@ModelAttribute("comment") Comment theComment,
-			Model theModel) {	
-		
-		//System.out.println("#############################");
-		//System.out.println(">>> showFormForUpdate > theId = " + theId); // 1st YES
-		//System.out.println(">>> showFormForUpdate > theComment = " + theComment); // 1st NULL
+	public String showFormForUpdate(@RequestParam("commentId") int theId, @ModelAttribute("comment") Comment theComment,
+			Model theModel) {
 		
 		Comment theTempComment = commentService.getComment(theId);
-		//System.out.println(">>> showFormForUpdate > theTempComment = " + theTempComment); // 1st YES
 		theModel.addAttribute("comment", theTempComment);
 		
 		List<Product> theTempProducts = productService.getProducts();
 		theModel.addAttribute("product", theTempProducts);
-		
-		//System.out.println(">>> showFormForUpdate DONE");
-		
+
 		return "comment-update-form";
 	}
 	
 	@PostMapping("/saveUpdatedComment")
-	public String saveUpdatedComment(
-			@Valid @ModelAttribute("comment") Comment theComment,
-			BindingResult theBindingResult,
+	public String saveUpdatedComment(@Valid @ModelAttribute("comment") Comment theComment, BindingResult theBindingResult,
 			Model theModel) {
-		
-		//System.out.println("#############################");
-		//System.out.println(">>> saveUpdatedComment > theComment = " + theComment); // 1st only ID
 		
 		// step 1 - validation - checking for empty comment
 		String tempCommentDesc = theComment.getCommentDesc();
 		if (tempCommentDesc == null) {
-			//System.out.println(">>> theComment = " + tempCommentDesc + "Please write a comment.");
 			theModel.addAttribute("comment", theComment);
 			theModel.addAttribute("product", new Product());
 			theModel.addAttribute("updatedCommentError", "Please write a comment.");
 			return "comment-update-form";	
 		}
 		
-		//System.out.println(">>> saveUpdatedComment START");
-
 		Comment theOldComment = commentService.getComment(theComment.getId());
-		
-		//System.out.println(">>> theComment = " + theComment); // has only .id and new .commentDesc
-		//System.out.println(">>> theOldComment = " + theOldComment);
-		
+
 		// step 1 - setting new date for .lastUpdate
 		theComment.setLastUpdate(onUpdate());
-		//System.out.println(">>> 1. theComment = " + theComment);
-		
+
 		// step 2 - copying all missing data from theOldComment to theComment
-		
 		// step 2.1 - created
 		theComment.setCreated(theOldComment.getCreated());
-		//System.out.println(">>> 2. theComment = " + theComment);
-		
+
 		// step 2.2 - userId
 		theComment.setUserId(theOldComment.getUserId());
-		//System.out.println(">>> 3. theComment = " + theComment);
-		
+
 		// step 2.3 - productId
 		int tempProductId = theOldComment.getProduct().getId();
-		//System.out.println(">>> tempProductId = " + tempProductId);
-		
+
 		Product tempProduct = productService.getProduct(tempProductId);
-		//System.out.println(">>> tempProduct = " + tempProduct);
 		theComment.setProduct(tempProduct);
 		
 		// step 3 - preview for theComment before saving it & save
-		//System.out.println(">>> theComment = " + theComment);
-		
 		if (theBindingResult.hasErrors()) {
-			//System.out.println("theBindingResult = " + theBindingResult);
 			return "comment-update-form";
 		}
 		else {
@@ -329,13 +291,3 @@ public class CommentController {
         }
 	}
 }
-
-
-
-
-
-
-
-
-
-

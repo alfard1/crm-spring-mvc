@@ -14,7 +14,6 @@
 </head>
 
 <body>
-
 		<div id="loginbox" style="margin-top: 50px; min-width: 300px;" class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3">
 			
 			<div class="panel panel-primary">

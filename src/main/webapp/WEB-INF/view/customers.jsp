@@ -15,11 +15,9 @@
 
 	<!-- reference our style sheet -->
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
-
 </head>
 
 <body>
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<a class="navbar-brand" href="${pageContext.request.contextPath}/home">Spring CRM</a>
   		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,12 +160,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-

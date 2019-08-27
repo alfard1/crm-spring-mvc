@@ -24,9 +24,7 @@ public class CommentDAOImpl implements CommentDAO {
 		Session currentSession = sessionFactory.getCurrentSession();
 				
 		// create a query  ... sort by last name
-		Query<Comment> theQuery = 
-				currentSession.createQuery("from Comment order by lastUpdate",
-											Comment.class);
+		Query<Comment> theQuery = currentSession.createQuery("from Comment order by lastUpdate", Comment.class);
 		
 		// execute query and get result list
 		List<Comment> comments = theQuery.getResultList();
@@ -43,7 +41,6 @@ public class CommentDAOImpl implements CommentDAO {
 		
 		// save/upate the customer, finally
 		currentSession.saveOrUpdate(theComment);
-		
 	}
 
 	@Override
@@ -61,34 +58,13 @@ public class CommentDAOImpl implements CommentDAO {
 	@Override
 	public void deleteComment(int theId) {
 
-		//System.out.println("### DAO Impl 1 Opening session");
-		
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 		
-		//System.out.println("### DAO Impl 2");
-		
 		// delete object with primary key
-		Query<?> theQuery = 
-				currentSession.createQuery("delete from Comment where id=:commentId");
+		Query<?> theQuery = currentSession.createQuery("delete from Comment where id=:commentId");
 		theQuery.setParameter("commentId", theId);
 		
-		//System.out.println("### DAO Impl 3");
-		
-		theQuery.executeUpdate();	
-		
-		//System.out.println("### DAO Impl 4");
+		theQuery.executeUpdate();
 	}
-
 }
-
-
-
-
-
-
-
-
-
-
-

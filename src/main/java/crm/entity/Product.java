@@ -1,8 +1,6 @@
 package crm.entity;
 
-//import java.util.ArrayList;
 import java.util.HashSet;
-//import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -30,8 +28,6 @@ public class Product {
 	@Column(name="name")
 	private String name;
 	
-	//@OneToMany(fetch=FetchType.LAZY, mappedBy="product", cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-	//private List<Comment> comments;
 	@NotNull(message = "is required")
 	@OneToMany(mappedBy="product", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private Set<Comment> comments = new HashSet<>();
@@ -71,13 +67,4 @@ public class Product {
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", \ncomments=" + comments + "]";
 	}
-
-
-	
-
 }
-
-
-
-
-

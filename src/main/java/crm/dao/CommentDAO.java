@@ -13,5 +13,4 @@ public interface CommentDAO {
 	public Comment getComment(int theId);
 
 	public void deleteComment(int theId);
-	
 }

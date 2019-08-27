@@ -4,7 +4,6 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 // Spring Web MVC provides support for web app initialization, makes sure code is automatically detected
 // and used to initialize the servlet container. We only need to override some methods like below.
-
 public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
@@ -24,11 +23,4 @@ public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationC
 	protected String[] getServletMappings() {
 		return new String[] { "/" };
 	}
-
 }
-
-
-
-
-
-

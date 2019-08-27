@@ -23,10 +23,8 @@ public class ProductDAOImpl implements ProductDAO {
 		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
 				
-		// create a query  ... sort by last name
-		Query<Product> theQuery = 
-				currentSession.createQuery("from Product order by name",
-											Product.class);
+		// create a query: sort by last name
+		Query<Product> theQuery = currentSession.createQuery("from Product order by name", Product.class);
 		
 		// execute query and get result list
 		List<Product> products = theQuery.getResultList();
@@ -73,8 +71,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}	
 		return tempProduct;
 	}
-	
-	
+
 	  private static void printResult(Object result) {
 		    if (result == null) {
 		      System.out.print("NULL");
@@ -93,7 +90,6 @@ public class ProductDAOImpl implements ProductDAO {
 		    }
 		    System.out.println();
 		  }
-	
 
 	@Override
 	public void saveProduct(Product theProduct) {
@@ -103,7 +99,6 @@ public class ProductDAOImpl implements ProductDAO {
 		
 		// save/upate product
 		currentSession.saveOrUpdate(theProduct);
-		
 	}
 	  
 	@Override
@@ -132,16 +127,4 @@ public class ProductDAOImpl implements ProductDAO {
 
 		return m;
 	}
-
 }
-
-
-
-
-
-
-
-
-
-
-

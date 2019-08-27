@@ -19,9 +19,6 @@ public class Role {
 	@Column(name = "name")
 	private String name;
 
-	
-	// constructors
-	
 	public Role() {
 	}
 
@@ -29,9 +26,6 @@ public class Role {
 		this.name = name;
 	}
 
-	
-	// getters & setters
-	
 	public Long getId() {
 		return id;
 	}

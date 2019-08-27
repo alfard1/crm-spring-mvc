@@ -128,8 +128,7 @@
 
 	</dependencies>
 
-	<!-- Add support for Maven WAR Plugin -->
-
+	<!-- Support for Maven WAR Plugin -->
 	<build>
 		<finalName>crm-spring-mvc</finalName>
 	
@@ -144,6 +143,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
 
 </project>

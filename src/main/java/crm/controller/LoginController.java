@@ -8,47 +8,27 @@ public class LoginController {
 
 	@GetMapping("/showMyLoginPage")
 	public String showMyLoginPage() {
-		
 		return "fancy-login";
-		
 	}
 	
-	// add request mapping for /access-denied
-	
+	// mapping for custom pages
 	@GetMapping("/access-denied")
 	public String showAccessDenied() {
-		
 		return "access-denied";
-		
 	}
 	
 	@GetMapping("/home")
 	public String showHome() {
-		
 		return "home";
-		
 	}
 
 	@GetMapping("/more-info")
 	public String showMoreInfo() {
-
 		return "more-info";
-
 	}
 
 	@GetMapping("/api")
 	public String showApi() {
-
 		return "api";
-
 	}
 }
-
-
-
-
-
-
-
-
-

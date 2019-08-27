@@ -27,9 +27,6 @@ public class User {
 	inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Collection<Role> roles;
 
-	
-	// constructors
-	
 	public User() {
 	}
 
@@ -46,9 +43,6 @@ public class User {
 		this.roles = roles;
 	}
 
-	
-	// getters & setters
-	
 	public Long getId() {
 		return id;
 	}

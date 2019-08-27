@@ -5,10 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.BeanWrapperImpl;
 
-//
 // Validation is used to check password fields if they match. This is ran in user.CrmUser class.
-//
-
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 	
 	private String firstFieldName;
@@ -43,8 +40,6 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
         }
-
         return valid;
     }
-	
 }

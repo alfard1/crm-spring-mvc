@@ -1,7 +1,6 @@
 package crm.config;
 
 import java.beans.PropertyVetoException;
-import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -14,12 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.format.datetime.DateFormatter;
-import org.springframework.format.datetime.DateFormatterRegistrar;
-import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
-import org.springframework.format.number.NumberFormatAnnotationFormatterFactory;
-import org.springframework.format.support.DefaultFormattingConversionService;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -37,7 +30,6 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @EnableTransactionManagement
 @ComponentScan(basePackages="crm")
 @PropertySource({ "classpath:persistence-mysql.properties", "classpath:security-persistence-mysql.properties" })
-//@PropertySource({ "classpath:persistence-mysql.properties" })
 public class DemoAppConfig implements WebMvcConfigurer {
 
 	@Autowired
@@ -56,7 +48,6 @@ public class DemoAppConfig implements WebMvcConfigurer {
 	}
 	
 	// define a bean for our security datasource
-	
 	@Bean
 	public DataSource securityDataSource() {
 		
@@ -70,7 +61,6 @@ public class DemoAppConfig implements WebMvcConfigurer {
 		catch (PropertyVetoException exc) {
 			throw new RuntimeException(exc);
 		}		
-		
 
 		// set database connection props
 		securityDataSource.setJdbcUrl(env.getProperty("jdbc.url"));
@@ -140,12 +130,3 @@ public class DemoAppConfig implements WebMvcConfigurer {
           .addResourceLocations("/resources/"); 
     }
 }
-
-
-
-
-
-
-
-
-

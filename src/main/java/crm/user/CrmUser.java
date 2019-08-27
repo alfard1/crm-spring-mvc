@@ -30,7 +30,6 @@ public class CrmUser {
 	private String email;
 	
 	public CrmUser() {
-		
 	}
 
 	public String getUserName() {
@@ -64,6 +63,4 @@ public class CrmUser {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
 }

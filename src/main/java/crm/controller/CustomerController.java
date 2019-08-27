@@ -54,9 +54,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping("/saveCustomer")
-	public String saveCustomer(
-			@Valid @ModelAttribute("customer") Customer theCustomer,
-			BindingResult theBindingResult) {
+	public String saveCustomer(@Valid @ModelAttribute("customer") Customer theCustomer, BindingResult theBindingResult) {
 		
 		System.out.println(theBindingResult);
 		
@@ -64,19 +62,14 @@ public class CustomerController {
 			return "customer-form";
 		}
 		else {
-			//return "customer-confirmation";
-			
 			// save the customer using our service
 			customerService.saveCustomer(theCustomer);	
 			return "redirect:/customer/list";
 		}
-		
-		
 	}
 	
 	@GetMapping("/showFormForUpdate")
-	public String showFormForUpdate(@RequestParam("customerId") int theId,
-									Model theModel) {
+	public String showFormForUpdate(@RequestParam("customerId") int theId, Model theModel) {
 		
 		// get the customer from our service
 		Customer theCustomer = customerService.getCustomer(theId);	
@@ -90,20 +83,8 @@ public class CustomerController {
 	
 	@GetMapping("/delete")
 	public String deleteCustomer(@RequestParam("customerId") int theId) {
-		
-		// delete the customer
+
 		customerService.deleteCustomer(theId);
-		
 		return "redirect:/customer/list";
 	}
 }
-
-
-
-
-
-
-
-
-
-

@@ -1,17 +1,10 @@
 package crm.entity;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
 
-//import javax.persistence.CascadeType;
 import javax.persistence.*;
-//import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-//1st comment
-//2nd comment
 
 @Entity
 @Table(name="comments")
@@ -27,11 +20,6 @@ public class Comment {
 	@Column(name="comment_desc")
 	private String commentDesc;
 	
-	//@ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-	//@JoinColumn(name="product_id")
-	//private Product product;
-	
-	//@NotNull(message = "is required")
 	@ManyToOne
 	@JoinColumn(name="product_id")
 	private Product product;
@@ -44,9 +32,7 @@ public class Comment {
 
 	@Column(name="last_update")
 	private Date lastUpdate;
-	
-	
-	
+
 	public Comment() {
 	}
 
@@ -123,34 +109,11 @@ public class Comment {
         this.product = product;
         this.product.getComments().add(this);
 	}
-/*
-	public String getFormSelectedProduct() {
-		return formSelectedProduct;
-	}
 
-	public void setFormSelectedProduct(String formSelectedProduct) {
-		this.formSelectedProduct = formSelectedProduct;
-	}
-*/
 	@Override
 	public String toString() {
 		return "Comment [id=" + id + ", commentDesc=" + commentDesc + ", userId=" + userId
 				+ ", created=" + created + ", lastUpdate=" + lastUpdate 
 				+ ", ProductId=" + ((getProduct() == null) ? null : getProduct().getId() + "]");
 	}
-
-
-
-
-	
-
-	
-	
-	
-		
 }
-
-
-
-
-

@@ -5,7 +5,6 @@
 <html lang="en">
 
 <head>
-	
 	<title>Register New User Form | Spring CRM</title>
 	
 	<meta charset="utf-8">
@@ -19,13 +18,10 @@
 	<style>
 		.error {color:red}
 	</style>
-
 </head>
 
 <body>
-
 	<div>
-		
 		<div id="loginbox" style="margin-top: 50px;"
 			class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3">
 			
@@ -116,11 +112,8 @@
 						</div>
 
 				</div>
-
 			</div>
-
 		</div>
-
 	</div>
 
 </body>

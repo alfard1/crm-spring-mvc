@@ -1,13 +1,9 @@
 package crm.controller;
 
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.Valid;
 
-import crm.entity.Comment;
 import crm.service.CommentService;
 import crm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-//import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,13 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import crm.entity.Product;
 import crm.service.ProductService;
-import crm.user.CrmUser;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
 
-	
 	// add an initbinder to remove all whitespaces from strings comeing via controller from beginning and end of string
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -109,21 +102,14 @@ public class ProductController {
 		
 		productService.saveProduct(theProduct);
 		return "redirect:/product/list";
-		
 	}
 	
-	
-	
 	@GetMapping("/showFormForUpdate")
-	public String showFormForUpdate(
-			@RequestParam("productId") int theId,
-			//@ModelAttribute("product") Product theProduct,
-			Model theModel) {
+	public String showFormForUpdate(@RequestParam("productId") int theId, Model theModel) {
 		
 		// get the product from our service
-		//System.out.println("### >>> 1 START");
 		Product theProduct = productService.getProduct(theId);	
-		//System.out.println("### >>> 1 END");
+
 		// set product as a model attribute to pre-populate the form
 		theModel.addAttribute("product", theProduct);
 		
@@ -133,20 +119,7 @@ public class ProductController {
 	
 	@GetMapping("/delete")
 	public String deleteProduct(@RequestParam("productId") int theId) {
-		
-		// delete the product
 		productService.deleteProduct(theId);
-		
 		return "redirect:/product/list";
 	}
 }
-
-
-
-
-
-
-
-
-
-
