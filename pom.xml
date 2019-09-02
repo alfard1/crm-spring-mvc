@@ -4,7 +4,7 @@
 
 	<groupId>pl.edu.neg</groupId>
 	<artifactId>crm.spring.mvc</artifactId>
-	<version>6.2.4</version>
+	<version>6.2.6</version>
 	<packaging>war</packaging>
 
 	<name>spring-crm</name>

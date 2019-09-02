@@ -59,7 +59,6 @@ public class CommentController {
 	    return updated; 
 	}
 
-	// need to inject our services we need for Comments details
 	@Autowired
 	private CommentService commentService;
 	
@@ -78,28 +77,21 @@ public class CommentController {
 		List<Product> allProducts = productService.getProducts();
 		
 		if (allProducts.isEmpty()) { 
-			//System.out.println("allProducts == null ");
 			return null;
 			}
-		else { 
-			//System.out.println("allProducts is NOT null");
-			
+		else {
 			for(Product tempProduct : allProducts) {
-				//System.out.println("   >>> " + tempProduct.getName());
 				productNamesList.put(tempProduct.getName(), tempProduct.getName());
 			}
 		}
-		//System.out.println("Map<String,String> productNamesList = " + productNamesList);
 		return productNamesList;		
 	}
 
 	@GetMapping("/list")
 	public String listComments(Model theModel) {
-		
-		// get comments from the service
+
 		List<Comment> theComments = commentService.getComments();
-				
-		// add comments to the model
+
 		theModel.addAttribute("comments", theComments);
 
 		// TEST FOR DEBUGGING: printing all comments in the console
@@ -131,12 +123,10 @@ public class CommentController {
 			ModelMap theModelMap, 
 			BindingResult theBindingResult) {
 
-		System.out.println(">>> inside 'saveNewComment'");
-
 		// step 1 - validation - checking for empty comment
 		String tempCommentDesc = theComment.getCommentDesc();
 		if (tempCommentDesc == null) {
-			System.out.println(">>> theComment = " + tempCommentDesc + "Please write a comment.");
+			//System.out.println(">>> theComment = " + tempCommentDesc + "Please write a comment.");
 			theModelMap.addAttribute("comment", theComment);
 			theModelMap.addAttribute("product", new Product());
 			theModelMap.addAttribute("newCommentError", "Please write a comment.");
@@ -154,14 +144,12 @@ public class CommentController {
 		String tempProductName = theComment.getProduct().getName();
 		
 		if (tempProductName == null) {
-			//System.out.println(">>> Product not selected!!!");
 			theModelMap.addAttribute("comment", theComment);
 			theModelMap.addAttribute("product", new Product());
 			theModelMap.addAttribute("newCommentError", "Please select product.");
 			return "comment-new-form";	
 		}
 		else {
-			//System.out.println(">>> Product selected, tempProductName = " + tempProductName);
 			theModelMap.addAttribute("product.name", tempProductName);
 		}
 		
@@ -169,8 +157,7 @@ public class CommentController {
 		int tempProductId = 0;
 				
 		List<Product> foundProducts = productService.findProducts(theComment.getProduct().getName());
-		if (foundProducts.isEmpty()) { 
-			//System.out.println("foundProducts == null ");
+		if (foundProducts.isEmpty()) {
 			theModelMap.addAttribute("comment", theComment);
 			theModelMap.addAttribute("product", new Product());
 			theModelMap.addAttribute("newCommentError", "Product doesn't exist in DB.");
@@ -179,13 +166,11 @@ public class CommentController {
 		else { System.out.println("foundProducts is NOT null"); 
 		   for(Product p : foundProducts) {
 			   tempProductId = p.getId();
-			   //System.out.println("   >>> tempProductId = " + tempProductId);
 		   }
 		}
 						
 		// step 4 - select Product from productId and finally save our comment
 		Product tempProduct = productService.getProduct(tempProductId);
-		//System.out.println(">>> tempProduct = " + tempProduct);
 		
 		if (theBindingResult.hasErrors()) {
 			return "comment-new-form";
@@ -194,8 +179,7 @@ public class CommentController {
 			theComment.setCreated(onCreate());
 			theComment.setLastUpdate(onUpdate());
 			theComment.setProduct(tempProduct);
-			
-			//System.out.println("### >>> theComment = " + theComment);
+
 			commentService.saveComment(theComment);
 			return "redirect:/comments/list";
 		}	
@@ -257,7 +241,6 @@ public class CommentController {
 	
 	@GetMapping("/delete")
 	public String deleteComment(@RequestParam("commentId") int theId) {
-		//System.out.println("### Controller 1");
 		commentService.deleteComment(theId);
 		return "redirect:/comments/list";
 	}
@@ -276,12 +259,10 @@ public class CommentController {
         if (authentication != null)
             if (authentication.getPrincipal() instanceof UserDetails) {
             	id = ((UserDetails) authentication.getPrincipal()).getUsername();
-            	//System.out.println("### inside getCurrentUserId id1 = " + id);
             }
                 
             else if (authentication.getPrincipal() instanceof String) {
             	id = (String) authentication.getPrincipal();
-            	//System.out.println("### inside getCurrentUserId id2 = " + id);
             }
                 
         try {

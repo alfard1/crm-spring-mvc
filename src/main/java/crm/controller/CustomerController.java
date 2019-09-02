@@ -37,13 +37,8 @@ public class CustomerController {
 	
 	@GetMapping("/list")
 	public String listCustomers(Model theModel) {
-		
-		// get customers from the service
 		List<Customer> theCustomers = customerService.getCustomers();
-				
-		// add the customers to the model
 		theModel.addAttribute("customers", theCustomers);
-		
 		return "customers";
 	}
 	
@@ -56,13 +51,12 @@ public class CustomerController {
 	@PostMapping("/saveCustomer")
 	public String saveCustomer(@Valid @ModelAttribute("customer") Customer theCustomer, BindingResult theBindingResult) {
 		
-		System.out.println(theBindingResult);
+		//System.out.println(theBindingResult);
 		
 		if (theBindingResult.hasErrors()) {
 			return "customer-form";
 		}
 		else {
-			// save the customer using our service
 			customerService.saveCustomer(theCustomer);	
 			return "redirect:/customer/list";
 		}
@@ -83,7 +77,6 @@ public class CustomerController {
 	
 	@GetMapping("/delete")
 	public String deleteCustomer(@RequestParam("customerId") int theId) {
-
 		customerService.deleteCustomer(theId);
 		return "redirect:/customer/list";
 	}

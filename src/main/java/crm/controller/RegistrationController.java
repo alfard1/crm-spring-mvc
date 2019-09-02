@@ -49,7 +49,7 @@ public class RegistrationController {
 		String userName = theCrmUser.getUserName();
 		logger.info("Processing registration form for: " + userName);
 		
-		// form validation (rules are here: CrmUser.java)
+		// form validation (rules: CrmUser.java)
 		if (theBindingResult.hasErrors()) {
 			logger.warning("User name/password can not be empty.");		
 			return "registration-form";	

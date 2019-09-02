@@ -33,13 +33,6 @@ public class ProductController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 
-	// need to inject our services we need for Comments details
-	@Autowired
-	private CommentService commentService;
-
-	@Autowired
-	private UserService userService;
-
 	@Autowired
 	private ProductService productService;
 	
@@ -81,7 +74,6 @@ public class ProductController {
 			Model theModel) {
 		
 		String tempProductName = theProduct.getName();
-		//System.out.println("tempProductName = " + tempProductName);
 
 		if (productService.findProducts(tempProductName).isEmpty()) {
 			System.out.println("Product with the name '" + tempProductName + "' doesn't exist, you can create it.");
@@ -106,14 +98,8 @@ public class ProductController {
 	
 	@GetMapping("/showFormForUpdate")
 	public String showFormForUpdate(@RequestParam("productId") int theId, Model theModel) {
-		
-		// get the product from our service
-		Product theProduct = productService.getProduct(theId);	
-
-		// set product as a model attribute to pre-populate the form
+		Product theProduct = productService.getProduct(theId);
 		theModel.addAttribute("product", theProduct);
-		
-		// send over to our form		
 		return "product-form";
 	}
 	
