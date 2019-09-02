@@ -113,8 +113,6 @@
 			</table>
 		</div>
 	</div>
-	</div>
-	</div>
 	
 	<div class="legend-with-padding">
 		<div class="legend-background">

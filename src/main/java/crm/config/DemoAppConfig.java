@@ -35,9 +35,6 @@ public class DemoAppConfig implements WebMvcConfigurer {
 	@Autowired
 	private Environment env;
 
-	// set up a logger for diagnostics
-	private Logger logger = Logger.getLogger(getClass().getName());
-	
 	// define a bean for ViewResolver
 	@Bean
 	public ViewResolver viewResolver() {		
@@ -78,33 +75,22 @@ public class DemoAppConfig implements WebMvcConfigurer {
 	
 	// helper method, read environment property and convert to int
 	private int getIntProperty(String propName) {
-		
 		String propVal = env.getProperty(propName);
-		
-		// now convert to int
-		int intPropVal = Integer.parseInt(propVal);
-		
-		return intPropVal;
+		return Integer.parseInt(propVal);
 	}		
 	
 	private Properties getHibernateProperties() {
-
-		// set hibernate properties
 		Properties props = new Properties();
-
 		props.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
 		props.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-		
 		return props;				
 	}	
 	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory(){
-		
-		// create session factorys
+
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		
-		// set the properties
+
 		sessionFactory.setDataSource(securityDataSource());
 		sessionFactory.setPackagesToScan(env.getProperty("hibernate.packagesToScan"));
 		sessionFactory.setHibernateProperties(getHibernateProperties());

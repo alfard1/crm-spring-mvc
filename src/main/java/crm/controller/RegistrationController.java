@@ -1,33 +1,27 @@
 package crm.controller;
 
-import java.util.logging.Logger;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import crm.service.UserService;
+import crm.user.CrmUser;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import crm.service.UserService;
-import crm.user.CrmUser;
+import javax.validation.Valid;
+import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/register")
 public class RegistrationController {
 	
-    @Autowired
-    private UserService userService;
-    
+    private final UserService userService;
+	public RegistrationController(UserService userService) {
+		this.userService = userService;
+	}
 	private Logger logger = Logger.getLogger(getClass().getName());
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
