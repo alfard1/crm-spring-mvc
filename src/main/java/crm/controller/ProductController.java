@@ -33,14 +33,7 @@ public class ProductController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 
-	// need to inject our services we need for Comments details
-	@Autowired
-	private CommentService commentService;
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
+    @Autowired
 	private ProductService productService;
 	
 	@GetMapping("/list")
@@ -78,15 +71,13 @@ public class ProductController {
 			Model theModel) {
 		
 		String tempProductName = theProduct.getName();
-		if (productService.findProducts(tempProductName).isEmpty()) {
-		}
-		else {
-			theModel.addAttribute("product", theProduct);
-			theModel.addAttribute("newProductError", "Product already exists.");
-			return "product-form";
-		}
+        if (!productService.findProducts(tempProductName).isEmpty()) {
+            theModel.addAttribute("product", theProduct);
+            theModel.addAttribute("newProductError", "Product already exists.");
+            return "product-form";
+        }
 
-		// checking validation (empty product name)
+        // checking validation (empty product name)
 		if (theBindingResult.hasErrors()) {
 			theModel.addAttribute("product", theProduct);
 			return "product-form";

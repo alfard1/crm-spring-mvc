@@ -72,19 +72,16 @@ public class CommentController {
 	@ModelAttribute("productNamesList")
 	public Map<String, String> getProductNamesList() {
 		
-		// 1st position is an Entity object, 2nd position will be shown online
+		// 1st String is an Entity object name, 2nd String will be shown online
 		Map<String,String> productNamesList = new HashMap<>();
 		
 		List<Product> allProducts = productService.getProducts();
-		
-		if (allProducts.isEmpty()) {
-			return null;
-			}
-		else {
+
+		if (!allProducts.isEmpty()) {
 			for(Product tempProduct : allProducts) {
 				productNamesList.put(tempProduct.getName(), tempProduct.getName());
 			}
-		}
+		} else return null;
 		return productNamesList;		
 	}
 
@@ -124,7 +121,6 @@ public class CommentController {
 		// step 1 - validation - checking for empty comment
 		String tempCommentDesc = theComment.getCommentDesc();
 		if (tempCommentDesc == null) {
-			System.out.println(">>> theComment = " + tempCommentDesc + "Please write a comment.");
 			theModelMap.addAttribute("comment", theComment);
 			theModelMap.addAttribute("product", new Product());
 			theModelMap.addAttribute("newCommentError", "Please write a comment.");
@@ -140,7 +136,6 @@ public class CommentController {
 		// step 3.1 - in memory we have only name of the product, without product.id, let's take product name
 		
 		String tempProductName = theComment.getProduct().getName();
-		
 		if (tempProductName == null) {
 			theModelMap.addAttribute("comment", theComment);
 			theModelMap.addAttribute("product", new Product());
@@ -153,7 +148,6 @@ public class CommentController {
 		
 		// step 3.2 - now, we can find productId
 		int tempProductId = 0;
-				
 		List<Product> foundProducts = productService.findProducts(theComment.getProduct().getName());
 		if (foundProducts.isEmpty()) {
 			theModelMap.addAttribute("comment", theComment);
@@ -161,17 +155,11 @@ public class CommentController {
 			theModelMap.addAttribute("newCommentError", "Product doesn't exist in DB.");
 			return "comment-new-form";	
 		}
-		else {
-		   for(Product p : foundProducts) {
-			   tempProductId = p.getId();
-		   }
-		}
+		else for (Product p : foundProducts) tempProductId = p.getId();
 
 		Product tempProduct = productService.getProduct(tempProductId);
 		
-		if (theBindingResult.hasErrors()) {
-			return "comment-new-form";
-		}
+		if (theBindingResult.hasErrors()) return "comment-new-form";
 		else {
 			theComment.setCreated(onCreate());
 			theComment.setLastUpdate(onUpdate());
@@ -189,7 +177,6 @@ public class CommentController {
 		theModel.addAttribute("comment", theTempComment);
 		List<Product> theTempProducts = productService.getProducts();
 		theModel.addAttribute("product", theTempProducts);
-
 		return "comment-update-form";
 	}
 	
@@ -219,9 +206,7 @@ public class CommentController {
 		theComment.setProduct(tempProduct);
 		
 		// step 3 - preview for theComment before saving it & save
-		if (theBindingResult.hasErrors()) {
-			return "comment-update-form";
-		}
+		if (theBindingResult.hasErrors()) return "comment-update-form";
 		else {
 			commentService.saveComment(theComment);
 			return "redirect:/comments/list";
