@@ -6,11 +6,11 @@ import crm.entity.Comment;
 
 public interface CommentDAO {
 
-	List<Comment> getComments();
+	public List<Comment> getComments();
 
-	void saveComment(Comment theComment);
+	public void saveComment(Comment theComment);
 
-	Comment getComment(int theId);
+	public Comment getComment(int theId);
 
-	void deleteComment(int theId);
+	public void deleteComment(int theId);
 }

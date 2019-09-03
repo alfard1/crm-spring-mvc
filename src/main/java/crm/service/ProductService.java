@@ -6,13 +6,13 @@ import crm.entity.Product;
 
 public interface ProductService {
 
-	List<Product> getProducts();
+	public List<Product> getProducts();
 
-	void saveProduct(Product theProduct);
+	public void saveProduct(Product theProduct);
 
-	Product getProduct(int theId);
+	public Product getProduct(int theId);
 
-	void deleteProduct(int theId);
+	public void deleteProduct(int theId);
 	
-	List<Product> findProducts(String tempProductName);
+	public List<Product> findProducts(String tempProductName);
 }

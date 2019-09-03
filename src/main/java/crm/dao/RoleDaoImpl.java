@@ -11,16 +11,21 @@ import crm.entity.Role;
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
+	// need to inject the session factory
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	@Override
 	public Role findRoleByName(String theRoleName) {
+
+		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
+
+		// now retrieve/read from database using name
 		Query<Role> theQuery = currentSession.createQuery("from Role where name=:roleName", Role.class);
 		theQuery.setParameter("roleName", theRoleName);
 		
-		Role theRole;
+		Role theRole = null;
 		
 		try {
 			theRole = theQuery.getSingleResult();

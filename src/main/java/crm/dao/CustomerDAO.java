@@ -6,11 +6,11 @@ import crm.entity.Customer;
 
 public interface CustomerDAO {
 
-	List<Customer> getCustomers();
+	public List<Customer> getCustomers();
 
-	void saveCustomer(Customer theCustomer);
+	public void saveCustomer(Customer theCustomer);
 
-	Customer getCustomer(int theId);
+	public Customer getCustomer(int theId);
 
-	void deleteCustomer(int theId);
+	public void deleteCustomer(int theId);
 }

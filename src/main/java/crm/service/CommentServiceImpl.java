@@ -12,6 +12,7 @@ import crm.entity.Comment;
 @Service
 public class CommentServiceImpl implements CommentService {
 
+	// need to inject comment dao
 	@Autowired
 	private CommentDAO commentDAO;
 	

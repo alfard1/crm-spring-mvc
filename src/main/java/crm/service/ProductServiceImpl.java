@@ -12,6 +12,7 @@ import crm.entity.Product;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+	// need to inject customer dao
 	@Autowired
 	private ProductDAO productDAO;
 	

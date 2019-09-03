@@ -6,14 +6,14 @@ import crm.entity.Product;
 
 public interface ProductDAO {
 
-	List<Product> getProducts();
+	public List<Product> getProducts();
 
-	void saveProduct(Product theProduct);
+	public void saveProduct(Product theProduct);
 
-	Product getProduct(int theId);
+	public Product getProduct(int theId);
 
-	void deleteProduct(int theId);
+	public void deleteProduct(int theId);
 	
-	List<Product> findProduct(String theName);
+	public List<Product> findProduct(String theName);
 	
 }
