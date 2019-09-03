@@ -80,7 +80,8 @@
 			<br>
 
 			<p>Backend is built on <b>Spring MVC Framework</b>. I used Spring all Java configuration (no xml)
-				and Maven for project dependency management. I used following versions:</p>
+				and Maven for project dependency management. DAO is leveraged by <b>native Hibernate API</b>.
+				I used following versions:</p>
 
 			<ul>
 				<li>Spring 5.1.6</li>

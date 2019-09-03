@@ -6,8 +6,6 @@ import crm.entity.User;
 import crm.user.CrmUser;
 
 public interface UserService extends UserDetailsService {
-
     User findByUserName(String userName);
-
     void save(CrmUser crmUser);
 }

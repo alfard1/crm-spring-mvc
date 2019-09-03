@@ -16,15 +16,14 @@ import crm.service.UserService;
 @EnableWebSecurity
 public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	// add a reference to our security data source
-    @Autowired
-    private UserService userService;
-	
-    @Autowired
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-    
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception { auth.authenticationProvider(authenticationProvider());
+    private final UserService userService;
+
+	public DemoSecurityConfig(UserService userService) {
+		this.userService = userService;
+	}
+
+	@Override
+    protected void configure(AuthenticationManagerBuilder auth) { auth.authenticationProvider(authenticationProvider());
     }
 	
 	@Override
