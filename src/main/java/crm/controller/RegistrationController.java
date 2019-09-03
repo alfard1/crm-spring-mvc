@@ -51,7 +51,6 @@ public class RegistrationController {
 
 		// check the database if user already exists
         crm.entity.User existing = userService.findByUserName(userName);
-        System.out.println("### >>>> existing = " + existing);
         if (existing != null){
         	theModel.addAttribute("crmUser", new CrmUser());
 			theModel.addAttribute("registrationError", "User name already exists.");
@@ -59,9 +58,7 @@ public class RegistrationController {
         	return "registration-form";
         }
 
-		// create user account    
         userService.save(theCrmUser);
-        
         logger.info("Successfully created user: " + userName);     
         return "registration-confirmation";		
 	}

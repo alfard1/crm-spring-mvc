@@ -1,11 +1,6 @@
 package crm.config;
 
-import java.beans.PropertyVetoException;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import javax.sql.DataSource;
-
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +17,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
+import java.util.Properties;
 
-// thanks to this we don't need any XML with configuration
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
@@ -35,7 +31,6 @@ public class DemoAppConfig implements WebMvcConfigurer {
 	@Autowired
 	private Environment env;
 
-	// define a bean for ViewResolver
 	@Bean
 	public ViewResolver viewResolver() {		
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();		
@@ -43,15 +38,11 @@ public class DemoAppConfig implements WebMvcConfigurer {
 		viewResolver.setSuffix(".jsp");		
 		return viewResolver;
 	}
-	
-	// define a bean for our security datasource
+
 	@Bean
 	public DataSource securityDataSource() {
-		
-		// create connection pool
+
 		ComboPooledDataSource securityDataSource = new ComboPooledDataSource();
-				
-		// set the jdbc driver class
 		try {
 			securityDataSource.setDriverClass("com.mysql.jdbc.Driver");		
 		}
@@ -88,24 +79,18 @@ public class DemoAppConfig implements WebMvcConfigurer {
 	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory(){
-
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-
 		sessionFactory.setDataSource(securityDataSource());
 		sessionFactory.setPackagesToScan(env.getProperty("hibernate.packagesToScan"));
 		sessionFactory.setHibernateProperties(getHibernateProperties());
-		
 		return sessionFactory;
 	}	
 	
 	@Bean
 	@Autowired
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-		
-		// setup transaction manager based on session factory
 		HibernateTransactionManager txManager = new HibernateTransactionManager();
 		txManager.setSessionFactory(sessionFactory);
-
 		return txManager;
 	}
 	

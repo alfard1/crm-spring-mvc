@@ -45,8 +45,7 @@ public class ProductController {
 	
 	@GetMapping("/list")
 	public String listProducts(Model theModel) {
-		
-		// get customers from the service
+
 		List<Product> theProducts = productService.getProducts();
 
 		// TEST FOR DEBUGGING: printing all products in the console
@@ -62,9 +61,7 @@ public class ProductController {
 			}
 		*/
 
-		// add the customers to the model
 		theModel.addAttribute("products", theProducts);
-
 		return "products";
 	}
 	
@@ -81,13 +78,9 @@ public class ProductController {
 			Model theModel) {
 		
 		String tempProductName = theProduct.getName();
-		//System.out.println("tempProductName = " + tempProductName);
-
 		if (productService.findProducts(tempProductName).isEmpty()) {
-			System.out.println("Product with the name '" + tempProductName + "' doesn't exist, you can create it.");
 		}
 		else {
-			System.out.println("Product with the name '" + tempProductName + "' already exists!!!");
 			theModel.addAttribute("product", theProduct);
 			theModel.addAttribute("newProductError", "Product already exists.");
 			return "product-form";
@@ -96,24 +89,17 @@ public class ProductController {
 		// checking validation (empty product name)
 		if (theBindingResult.hasErrors()) {
 			theModel.addAttribute("product", theProduct);
-			System.out.println(theBindingResult);
 			return "product-form";
 		}
-		
+
 		productService.saveProduct(theProduct);
 		return "redirect:/product/list";
 	}
 	
 	@GetMapping("/showFormForUpdate")
 	public String showFormForUpdate(@RequestParam("productId") int theId, Model theModel) {
-		
-		// get the product from our service
-		Product theProduct = productService.getProduct(theId);	
-
-		// set product as a model attribute to pre-populate the form
+		Product theProduct = productService.getProduct(theId);
 		theModel.addAttribute("product", theProduct);
-		
-		// send over to our form		
 		return "product-form";
 	}
 	
