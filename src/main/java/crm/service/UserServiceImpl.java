@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-	// need to inject user dao
 	@Autowired
 	private UserDao userDao;
 
@@ -35,26 +34,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User findByUserName(String userName) {
-		// check the database if the user already exists
-		System.out.println("#### >>>> userDao.findByUserName(userName)" + userDao.findByUserName(userName));
 		return userDao.findByUserName(userName);
 	}
 
 	@Override
 	@Transactional
 	public void save(CrmUser crmUser) {
-
 		User user = new User();
-
-		 // assign user details to the user object
 		user.setUserName(crmUser.getUserName());
 		user.setPassword(passwordEncoder.encode(crmUser.getPassword()));
 		user.setEmail(crmUser.getEmail());
-
-		// give user default role of "employee"
 		user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_EMPLOYEE")));
-
-		 // save user in the database
 		userDao.save(user);
 	}
 
