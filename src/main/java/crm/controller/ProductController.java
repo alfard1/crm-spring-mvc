@@ -17,15 +17,15 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
+    @Autowired
+    private ProductService productService;
+
     // add an initbinder to remove all whitespaces from strings comeing via controller from beginning and end of string
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
-
-    @Autowired
-    private ProductService productService;
 
     @GetMapping("/list")
     public String listProducts(Model model) {

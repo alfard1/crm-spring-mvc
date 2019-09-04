@@ -8,9 +8,7 @@ import crm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -30,6 +28,15 @@ import java.util.Map;
 @RequestMapping("/comments")
 public class CommentController {
 
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProductService productService;
+
     // add an initbinder to remove all whitespaces from strings coming via controller
     // from beginning and end of the string
     @InitBinder
@@ -41,25 +48,13 @@ public class CommentController {
     // add methods for setting dates (create and update product)
     @PrePersist
     protected static Date onCreate() {
-        Date created = new Date();
-        return created;
+        return new Date();
     }
 
     @PreUpdate
     protected static Date onUpdate() {
-        Date updated = new Date();
-        return updated;
+        return new Date();
     }
-
-    // need to inject our services we need for Comments details
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
 
     @ModelAttribute("productNamesList")
     public Map<String, String> getProductNamesList() {
@@ -70,9 +65,7 @@ public class CommentController {
         List<Product> allProducts = productService.getProducts();
 
         if (!allProducts.isEmpty()) {
-            for (Product tempProduct : allProducts) {
-                productNamesList.put(tempProduct.getName(), tempProduct.getName());
-            }
+            for (Product tempProduct : allProducts) productNamesList.put(tempProduct.getName(), tempProduct.getName());
         } else return null;
         return productNamesList;
     }
@@ -104,7 +97,7 @@ public class CommentController {
         return "comment-new-form";
     }
 
-    @RequestMapping(value = "/saveNewComment", method = RequestMethod.POST)
+    @PostMapping("/saveNewComment")
     public String saveNewComment(
             @ModelAttribute("comment") Comment comment,
             ModelMap modelMap,
@@ -209,11 +202,12 @@ public class CommentController {
         return "redirect:/comments/list";
     }
 
-    String getCurrentUserName() {
+    private String getCurrentUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
 
+    /*
     Long getCurrentUserId() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
@@ -232,4 +226,5 @@ public class CommentController {
             return 1L;
         }
     }
+    */
 }

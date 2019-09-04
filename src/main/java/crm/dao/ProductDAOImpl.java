@@ -19,8 +19,7 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> getProducts() {
         Session currentSession = sessionFactory.getCurrentSession();
         Query<Product> query = currentSession.createQuery("from Product order by name", Product.class);
-        List<Product> products = query.getResultList();
-        return products;
+        return query.getResultList();
     }
 
     @Override
@@ -61,8 +60,8 @@ public class ProductDAOImpl implements ProductDAO {
         } else if (result instanceof Object[]) {
             Object[] row = (Object[]) result;
             System.out.print("[");
-            for (int i = 0; i < row.length; i++) {
-                printResult(row[i]);
+            for (Object o : row) {
+                printResult(o);
             }
             System.out.print("]");
         } else if (result instanceof Long || result instanceof Double
@@ -90,10 +89,9 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> findProduct(String tempProductName) {
         Session currentSession = sessionFactory.getCurrentSession();
-        List<Product> m = currentSession.createQuery(
+        return (List<Product>) currentSession.createQuery(
                 "SELECT e FROM Product e where e.name=:productName")
                 .setParameter("productName", tempProductName)
                 .getResultList();
-        return m;
     }
 }

@@ -19,8 +19,7 @@ public class CommentDAOImpl implements CommentDAO {
     public List<Comment> getComments() {
         Session currentSession = sessionFactory.getCurrentSession();
         Query<Comment> query = currentSession.createQuery("from Comment order by lastUpdate", Comment.class);
-        List<Comment> comments = query.getResultList();
-        return comments;
+        return query.getResultList();
     }
 
     @Override
@@ -32,8 +31,7 @@ public class CommentDAOImpl implements CommentDAO {
     @Override
     public Comment getComment(int id) {
         Session currentSession = sessionFactory.getCurrentSession();
-        Comment comment = currentSession.get(Comment.class, id);
-        return comment;
+        return currentSession.get(Comment.class, id);
     }
 
     @Override

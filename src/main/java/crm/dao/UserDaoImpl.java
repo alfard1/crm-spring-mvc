@@ -20,7 +20,7 @@ public class UserDaoImpl implements UserDao {
         Session currentSession = sessionFactory.getCurrentSession();
         Query<User> query = currentSession.createQuery("from User where userName=:uName", User.class);
         query.setParameter("uName", userName);
-        User user = null;
+        User user;
 
         // if 1 user exists in DB code below works without exception and return user found in DB
         // when exception appears (no user in DB) this run code from 'catch'
