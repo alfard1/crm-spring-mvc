@@ -6,28 +6,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginController {
 
-	@GetMapping("/showMyLoginPage")
-	public String showMyLoginPage() {
-		return "fancy-login";
-	}
+    @GetMapping("/showMyLoginPage")
+    public String showMyLoginPage() {
+        return "fancy-login";
+    }
 
-	@GetMapping("/access-denied")
-	public String showAccessDenied() {
-		return "access-denied";
-	}
-	
-	@GetMapping("/home")
-	public String showHome() {
-		return "home";
-	}
+    @GetMapping("/access-denied")
+    public String showAccessDenied() {
+        return "access-denied";
+    }
 
-	@GetMapping("/more-info")
-	public String showMoreInfo() {
-		return "more-info";
-	}
+    @GetMapping("/home")
+    public String showHome() {
+        return "home";
+    }
 
-	@GetMapping("/api")
-	public String showApi() {
-		return "api";
-	}
+    @GetMapping("/more-info")
+    public String showMoreInfo() {
+        return "more-info";
+    }
+
+    @GetMapping("/api")
+    public String showApi() {
+        return "api";
+    }
 }

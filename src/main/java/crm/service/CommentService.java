@@ -1,16 +1,16 @@
 package crm.service;
 
-import java.util.List;
-
 import crm.entity.Comment;
+
+import java.util.List;
 
 public interface CommentService {
 
-	List<Comment> getComments();
+    List<Comment> getComments();
 
-	void saveComment(Comment theComment);
+    void saveComment(Comment comment);
 
-	Comment getComment(int theId);
+    Comment getComment(int id);
 
-	void deleteComment(int theId);
+    void deleteComment(int id);
 }

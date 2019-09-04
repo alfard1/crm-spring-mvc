@@ -1,19 +1,19 @@
 package crm.dao;
 
-import java.util.List;
-
 import crm.entity.Product;
+
+import java.util.List;
 
 public interface ProductDAO {
 
-	List<Product> getProducts();
+    List<Product> getProducts();
 
-	void saveProduct(Product theProduct);
+    void saveProduct(Product product);
 
-	Product getProduct(int theId);
+    Product getProduct(int id);
 
-	void deleteProduct(int theId);
-	
-	List<Product> findProduct(String theName);
-	
+    void deleteProduct(int id);
+
+    List<Product> findProduct(String name);
+
 }

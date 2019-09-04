@@ -1,16 +1,16 @@
 package crm.dao;
 
-import java.util.List;
-
 import crm.entity.Customer;
+
+import java.util.List;
 
 public interface CustomerDAO {
 
-	List<Customer> getCustomers();
+    List<Customer> getCustomers();
 
-	void saveCustomer(Customer theCustomer);
+    void saveCustomer(Customer customer);
 
-	Customer getCustomer(int theId);
+    Customer getCustomer(int id);
 
-	void deleteCustomer(int theId);
+    void deleteCustomer(int id);
 }

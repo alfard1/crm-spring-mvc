@@ -1,47 +1,46 @@
 package crm.dao;
 
-import java.util.List;
-
+import crm.entity.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import crm.entity.Customer;
+import java.util.List;
 
 @Repository
 public class CustomerDAOImpl implements CustomerDAO {
 
-	@Autowired
-	private SessionFactory sessionFactory;
-			
-	@Override
-	public List<Customer> getCustomers() {
-		Session currentSession = sessionFactory.getCurrentSession();
-		Query<Customer> theQuery = currentSession.createQuery("from Customer order by lastName", Customer.class);
-		List<Customer> customers = theQuery.getResultList();
-		return customers;
-	}
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	@Override
-	public void saveCustomer(Customer theCustomer) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.saveOrUpdate(theCustomer);
-	}
+    @Override
+    public List<Customer> getCustomers() {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Query<Customer> query = currentSession.createQuery("from Customer order by lastName", Customer.class);
+        List<Customer> customers = query.getResultList();
+        return customers;
+    }
 
-	@Override
-	public Customer getCustomer(int theId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		Customer theCustomer = currentSession.get(Customer.class, theId);
-		return theCustomer;
-	}
+    @Override
+    public void saveCustomer(Customer customer) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(customer);
+    }
 
-	@Override
-	public void deleteCustomer(int theId) {
-		Session currentSession = sessionFactory.getCurrentSession();
-		Query<?> theQuery = currentSession.createQuery("delete from Customer where id=:customerId");
-		theQuery.setParameter("customerId", theId);
-		theQuery.executeUpdate();		
-	}
+    @Override
+    public Customer getCustomer(int id) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Customer customer = currentSession.get(Customer.class, id);
+        return customer;
+    }
+
+    @Override
+    public void deleteCustomer(int id) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        Query<?> query = currentSession.createQuery("delete from Customer where id=:customerId");
+        query.setParameter("customerId", id);
+        query.executeUpdate();
+    }
 }

@@ -15,51 +15,53 @@ import java.util.logging.Logger;
 @Controller
 @RequestMapping("/register")
 public class RegistrationController {
-	
+
     private final UserService userService;
-	public RegistrationController(UserService userService) {
-		this.userService = userService;
-	}
-	private Logger logger = Logger.getLogger(getClass().getName());
 
-	@InitBinder
-	public void initBinder(WebDataBinder dataBinder) {
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}	
-	
-	@GetMapping("/showRegistrationForm")
-	public String showMyLoginPage(Model theModel) {
-		theModel.addAttribute("crmUser", new CrmUser());
-		return "registration-form";
-	}
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
-	@PostMapping("/processRegistrationForm")
-	public String processRegistrationForm(
-				@Valid @ModelAttribute("crmUser") CrmUser theCrmUser, 
-				BindingResult theBindingResult, 
-				Model theModel) {
-						
-		String userName = theCrmUser.getUserName();
-		logger.info("Processing registration form for: " + userName);
-		
-		// form validation (rules are here: CrmUser.java)
-		if (theBindingResult.hasErrors()) {
-			logger.warning("User name/password can not be empty.");		
-			return "registration-form";	
-		}
+    private Logger logger = Logger.getLogger(getClass().getName());
 
-		// check the database if user already exists
-        crm.entity.User existing = userService.findByUserName(userName);
-        if (existing != null){
-        	theModel.addAttribute("crmUser", new CrmUser());
-			theModel.addAttribute("registrationError", "User name already exists.");
-			logger.warning("User name already exists.");
-        	return "registration-form";
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
+    }
+
+    @GetMapping("/showRegistrationForm")
+    public String showMyLoginPage(Model model) {
+        model.addAttribute("crmUser", new CrmUser());
+        return "registration-form";
+    }
+
+    @PostMapping("/processRegistrationForm")
+    public String processRegistrationForm(
+            @Valid @ModelAttribute("crmUser") CrmUser crmUser,
+            BindingResult bindingResult,
+            Model model) {
+
+        String userName = crmUser.getUserName();
+        logger.info("Processing registration form for: " + userName);
+
+        // form validation (rules are here: CrmUser.java)
+        if (bindingResult.hasErrors()) {
+            logger.warning("User name/password can not be empty.");
+            return "registration-form";
         }
 
-        userService.save(theCrmUser);
-        logger.info("Successfully created user: " + userName);     
-        return "registration-confirmation";		
-	}
+        // check the database if user already exists
+        crm.entity.User existing = userService.findByUserName(userName);
+        if (existing != null) {
+            model.addAttribute("crmUser", new CrmUser());
+            model.addAttribute("registrationError", "User name already exists.");
+            logger.warning("User name already exists.");
+            return "registration-form";
+        }
+
+        userService.save(crmUser);
+        logger.info("Successfully created user: " + userName);
+        return "registration-confirmation";
+    }
 }

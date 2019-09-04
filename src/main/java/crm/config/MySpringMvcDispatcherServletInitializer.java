@@ -6,20 +6,20 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 // and used to initialize the servlet container. We only need to override some methods like below.
 public class MySpringMvcDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-	@Override
-	protected Class<?>[] getRootConfigClasses() {
-		return null;
-	}
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return null;
+    }
 
-	// targeting config class
-	@Override
-	protected Class<?>[] getServletConfigClasses() {
-		return new Class[] { DemoAppConfig.class };
-	}
+    // targeting config class
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{DemoAppConfig.class};
+    }
 
-	// mapping to the root of our app
-	@Override
-	protected String[] getServletMappings() {
-		return new String[] { "/" };
-	}
+    // mapping to the root of our app
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
 }

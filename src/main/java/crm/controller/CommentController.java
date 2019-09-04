@@ -1,14 +1,10 @@
 package crm.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.validation.Valid;
-
+import crm.entity.Comment;
+import crm.entity.Product;
+import crm.service.CommentService;
+import crm.service.ProductService;
+import crm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.Authentication;
@@ -20,227 +16,220 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import crm.entity.Comment;
-import crm.entity.Product;
-import crm.service.CommentService;
-import crm.service.ProductService;
-import crm.service.UserService;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.validation.Valid;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/comments")
 public class CommentController {
-	
-	// add an initbinder to remove all whitespaces from strings coming via controller
-	// from beginning and end of the string
-	@InitBinder
-	public void initBinder(WebDataBinder dataBinder) {
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}
-	
-	// add methods for setting dates (create and update product)
-	@PrePersist
-	protected static Date onCreate() {
-		Date created = new Date();
-		return created;
-	}
 
-	@PreUpdate
-	protected static Date onUpdate() {
-		Date updated = new Date();
-	    return updated; 
-	}
+    // add an initbinder to remove all whitespaces from strings coming via controller
+    // from beginning and end of the string
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
+    }
 
-	// need to inject our services we need for Comments details
-	@Autowired
-	private CommentService commentService;
-	
-	@Autowired
+    // add methods for setting dates (create and update product)
+    @PrePersist
+    protected static Date onCreate() {
+        Date created = new Date();
+        return created;
+    }
+
+    @PreUpdate
+    protected static Date onUpdate() {
+        Date updated = new Date();
+        return updated;
+    }
+
+    // need to inject our services we need for Comments details
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
     private UserService userService;
 
-	@Autowired
-	private ProductService productService;
+    @Autowired
+    private ProductService productService;
 
-	@ModelAttribute("productNamesList")
-	public Map<String, String> getProductNamesList() {
-		
-		// 1st String is an Entity object name, 2nd String will be shown online
-		Map<String,String> productNamesList = new HashMap<>();
-		
-		List<Product> allProducts = productService.getProducts();
+    @ModelAttribute("productNamesList")
+    public Map<String, String> getProductNamesList() {
 
-		if (!allProducts.isEmpty()) {
-			for(Product tempProduct : allProducts) {
-				productNamesList.put(tempProduct.getName(), tempProduct.getName());
-			}
-		} else return null;
-		return productNamesList;		
-	}
+        // 1st String is an Entity object name, 2nd String will be shown online
+        Map<String, String> productNamesList = new HashMap<>();
 
-	@GetMapping("/list")
-	public String listComments(Model theModel) {
+        List<Product> allProducts = productService.getProducts();
 
-		List<Comment> theComments = commentService.getComments();
-		theModel.addAttribute("comments", theComments);
+        if (!allProducts.isEmpty()) {
+            for (Product tempProduct : allProducts) {
+                productNamesList.put(tempProduct.getName(), tempProduct.getName());
+            }
+        } else return null;
+        return productNamesList;
+    }
 
-		// TEST FOR DEBUGGING: printing all comments in the console
+    @GetMapping("/list")
+    public String listComments(Model model) {
+
+        List<Comment> comments = commentService.getComments();
+        model.addAttribute("comments", comments);
+
+        // TEST FOR DEBUGGING: printing all comments in the console
 		/*
-			if (theComments.isEmpty()) { System.out.println("theComments == null "); }
-			else { System.out.println("theComments is NOT null");
-				for(Comment tempComment : theComments) {
+			if (comments.isEmpty()) { System.out.println("comments == null "); }
+			else { System.out.println("comments is NOT null");
+				for(Comment tempComment : comments) {
 					System.out.println("# Comment Id = " + tempComment.getId());
 					System.out.println("   >>> tempComment = " + tempComment);
 				}
 			}
 		*/
 
-		return "comments";
-	}
-	
-	@GetMapping("/showFormForAdd")
-	public String showFormForAdd(@ModelAttribute("comment") Comment theComment, Model theModel) {
-		theModel.addAttribute("comment", new Comment());
-		theModel.addAttribute("product", new Product());
-		return "comment-new-form";
-	}
-	
-	@RequestMapping(value = "/saveNewComment", method = RequestMethod.POST)
-	public String saveNewComment (
-			@ModelAttribute("comment") Comment theComment,
-			ModelMap theModelMap, 
-			BindingResult theBindingResult) {
+        return "comments";
+    }
 
-		// step 1 - validation - checking for empty comment
-		String tempCommentDesc = theComment.getCommentDesc();
-		if (tempCommentDesc == null) {
-			theModelMap.addAttribute("comment", theComment);
-			theModelMap.addAttribute("product", new Product());
-			theModelMap.addAttribute("newCommentError", "Please write a comment.");
-			return "comment-new-form";	
-		}
-				
-		// step 2 - get User Name and User Id from the session		
-		String tempUserName = getCurrentUserName();
-		crm.entity.User existing = userService.findByUserName(tempUserName);		
-		theComment.setUserId(existing.getId());
+    @GetMapping("/showFormForAdd")
+    public String showFormForAdd(@ModelAttribute("comment") Comment comment, Model model) {
+        model.addAttribute("comment", new Comment());
+        model.addAttribute("product", new Product());
+        return "comment-new-form";
+    }
 
-		// step 3 - take productId from the form
-		// step 3.1 - in memory we have only name of the product, without product.id, let's take product name
-		
-		String tempProductName = theComment.getProduct().getName();
-		if (tempProductName == null) {
-			theModelMap.addAttribute("comment", theComment);
-			theModelMap.addAttribute("product", new Product());
-			theModelMap.addAttribute("newCommentError", "Please select product.");
-			return "comment-new-form";	
-		}
-		else {
-			theModelMap.addAttribute("product.name", tempProductName);
-		}
-		
-		// step 3.2 - now, we can find productId
-		int tempProductId = 0;
-		List<Product> foundProducts = productService.findProducts(theComment.getProduct().getName());
-		if (foundProducts.isEmpty()) {
-			theModelMap.addAttribute("comment", theComment);
-			theModelMap.addAttribute("product", new Product());
-			theModelMap.addAttribute("newCommentError", "Product doesn't exist in DB.");
-			return "comment-new-form";	
-		}
-		else for (Product p : foundProducts) tempProductId = p.getId();
+    @RequestMapping(value = "/saveNewComment", method = RequestMethod.POST)
+    public String saveNewComment(
+            @ModelAttribute("comment") Comment comment,
+            ModelMap modelMap,
+            BindingResult bindingResult) {
 
-		Product tempProduct = productService.getProduct(tempProductId);
-		
-		if (theBindingResult.hasErrors()) return "comment-new-form";
-		else {
-			theComment.setCreated(onCreate());
-			theComment.setLastUpdate(onUpdate());
-			theComment.setProduct(tempProduct);
-			commentService.saveComment(theComment);
-			return "redirect:/comments/list";
-		}	
-	}
+        // step 1 - validation - checking for empty comment
+        String tempCommentDesc = comment.getCommentDesc();
+        if (tempCommentDesc == null) {
+            modelMap.addAttribute("comment", comment);
+            modelMap.addAttribute("product", new Product());
+            modelMap.addAttribute("newCommentError", "Please write a comment.");
+            return "comment-new-form";
+        }
 
-	@GetMapping("/showFormForUpdate")
-	public String showFormForUpdate(@RequestParam("commentId") int theId, @ModelAttribute("comment") Comment theComment,
-			Model theModel) {
+        // step 2 - get User Name and User Id from the session
+        String tempUserName = getCurrentUserName();
+        crm.entity.User existing = userService.findByUserName(tempUserName);
+        comment.setUserId(existing.getId());
 
-		Comment theTempComment = commentService.getComment(theId);
-		theModel.addAttribute("comment", theTempComment);
-		List<Product> theTempProducts = productService.getProducts();
-		theModel.addAttribute("product", theTempProducts);
-		return "comment-update-form";
-	}
-	
-	@PostMapping("/saveUpdatedComment")
-	public String saveUpdatedComment(@Valid @ModelAttribute("comment") Comment theComment, BindingResult theBindingResult,
-			Model theModel) {
-		
-		// step 1 - validation - checking for empty comment
-		String tempCommentDesc = theComment.getCommentDesc();
-		if (tempCommentDesc == null) {
-			theModel.addAttribute("comment", theComment);
-			theModel.addAttribute("product", new Product());
-			theModel.addAttribute("updatedCommentError", "Please write a comment.");
-			return "comment-update-form";	
-		}
-		
-		Comment theOldComment = commentService.getComment(theComment.getId());
+        // step 3 - take productId from the form
+        // step 3.1 - in memory we have only name of the product, without product.id, let's take product name
 
-		// step 1 - setting new date for .lastUpdate
-		theComment.setLastUpdate(onUpdate());
+        String tempProductName = comment.getProduct().getName();
+        if (tempProductName == null) {
+            modelMap.addAttribute("comment", comment);
+            modelMap.addAttribute("product", new Product());
+            modelMap.addAttribute("newCommentError", "Please select product.");
+            return "comment-new-form";
+        } else {
+            modelMap.addAttribute("product.name", tempProductName);
+        }
 
-		// step 2 - copying all missing data from theOldComment to theComment
-		theComment.setCreated(theOldComment.getCreated());
-		theComment.setUserId(theOldComment.getUserId());
-		int tempProductId = theOldComment.getProduct().getId();
-		Product tempProduct = productService.getProduct(tempProductId);
-		theComment.setProduct(tempProduct);
-		
-		// step 3 - preview for theComment before saving it & save
-		if (theBindingResult.hasErrors()) return "comment-update-form";
-		else {
-			commentService.saveComment(theComment);
-			return "redirect:/comments/list";
-		}	
-	}	
-	
-	@GetMapping("/delete")
-	public String deleteComment(@RequestParam("commentId") int theId) {
-		commentService.deleteComment(theId);
-		return "redirect:/comments/list";
-	}
-	
-	String getCurrentUserName() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return authentication.getName();
-	}
+        // step 3.2 - now, we can find productId
+        int tempProductId = 0;
+        List<Product> foundProducts = productService.findProducts(comment.getProduct().getName());
+        if (foundProducts.isEmpty()) {
+            modelMap.addAttribute("comment", comment);
+            modelMap.addAttribute("product", new Product());
+            modelMap.addAttribute("newCommentError", "Product doesn't exist in DB.");
+            return "comment-new-form";
+        } else for (Product p : foundProducts) tempProductId = p.getId();
 
-	Long getCurrentUserId() {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
+        Product tempProduct = productService.getProduct(tempProductId);
+
+        if (bindingResult.hasErrors()) return "comment-new-form";
+        else {
+            comment.setCreated(onCreate());
+            comment.setLastUpdate(onUpdate());
+            comment.setProduct(tempProduct);
+            commentService.saveComment(comment);
+            return "redirect:/comments/list";
+        }
+    }
+
+    @GetMapping("/showFormForUpdate")
+    public String showFormForUpdate(@RequestParam("commentId") int id, @ModelAttribute("comment") Comment comment,
+                                    Model model) {
+
+        Comment tempComment = commentService.getComment(id);
+        model.addAttribute("comment", tempComment);
+        List<Product> tempProducts = productService.getProducts();
+        model.addAttribute("product", tempProducts);
+        return "comment-update-form";
+    }
+
+    @PostMapping("/saveUpdatedComment")
+    public String saveUpdatedComment(@Valid @ModelAttribute("comment") Comment comment, BindingResult bindingResult,
+                                     Model model) {
+
+        // step 1 - validation - checking for empty comment
+        String tempCommentDesc = comment.getCommentDesc();
+        if (tempCommentDesc == null) {
+            model.addAttribute("comment", comment);
+            model.addAttribute("product", new Product());
+            model.addAttribute("updatedCommentError", "Please write a comment.");
+            return "comment-update-form";
+        }
+
+        Comment oldComment = commentService.getComment(comment.getId());
+
+        // step 1 - setting new date for .lastUpdate
+        comment.setLastUpdate(onUpdate());
+
+        // step 2 - copying all missing data from oldComment to comment
+        comment.setCreated(oldComment.getCreated());
+        comment.setUserId(oldComment.getUserId());
+        int tempProductId = oldComment.getProduct().getId();
+        Product tempProduct = productService.getProduct(tempProductId);
+        comment.setProduct(tempProduct);
+
+        // step 3 - preview for comment before saving it & save
+        if (bindingResult.hasErrors()) return "comment-update-form";
+        else {
+            commentService.saveComment(comment);
+            return "redirect:/comments/list";
+        }
+    }
+
+    @GetMapping("/delete")
+    public String deleteComment(@RequestParam("commentId") int id) {
+        commentService.deleteComment(id);
+        return "redirect:/comments/list";
+    }
+
+    String getCurrentUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
+
+    Long getCurrentUserId() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
 
         String id = null;
         if (authentication != null)
             if (authentication.getPrincipal() instanceof UserDetails) {
-            	id = ((UserDetails) authentication.getPrincipal()).getUsername();
+                id = ((UserDetails) authentication.getPrincipal()).getUsername();
+            } else if (authentication.getPrincipal() instanceof String) {
+                id = (String) authentication.getPrincipal();
             }
-            else if (authentication.getPrincipal() instanceof String) {
-            	id = (String) authentication.getPrincipal();
-            }
-                
+
         try {
             return Long.valueOf(id != null ? id : "1"); //anonymoususer
         } catch (NumberFormatException e) {
             return 1L;
         }
-	}
+    }
 }

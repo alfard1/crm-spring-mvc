@@ -1,18 +1,18 @@
 package crm.service;
 
-import java.util.List;
-
 import crm.entity.Product;
+
+import java.util.List;
 
 public interface ProductService {
 
-	List<Product> getProducts();
+    List<Product> getProducts();
 
-	void saveProduct(Product theProduct);
+    void saveProduct(Product product);
 
-	Product getProduct(int theId);
+    Product getProduct(int id);
 
-	void deleteProduct(int theId);
-	
-	List<Product> findProducts(String tempProductName);
+    void deleteProduct(int id);
+
+    List<Product> findProducts(String tempProductName);
 }
