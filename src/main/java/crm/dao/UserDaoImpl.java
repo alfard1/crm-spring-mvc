@@ -11,21 +11,16 @@ import crm.entity.User;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-	// need to inject the session factory
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	// it works only if in DB there is 1 object, for more code should be improved
+	// TODO: it works only if in DB there is 1 object, for more code should be improved
 	@Override
 	public User findByUserName(String theUserName) {
 
-		// get the current hibernate session
 		Session currentSession = sessionFactory.getCurrentSession();
-
-		// now retrieve/read from database using username
 		Query<User> theQuery = currentSession.createQuery("from User where userName=:uName", User.class);
 		theQuery.setParameter("uName", theUserName);
-		
 		User theUser = null;
 		
 		// if 1 user exists in DB code below works without exception and return user found in DB
