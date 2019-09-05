@@ -28,8 +28,11 @@ import java.util.Properties;
 @PropertySource({"classpath:persistence-mysql.properties", "classpath:security-persistence-mysql.properties"})
 public class DemoAppConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    public DemoAppConfig(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public ViewResolver viewResolver() {

@@ -2,7 +2,6 @@ package crm.controller;
 
 import crm.entity.Product;
 import crm.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +16,11 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     // add an initbinder to remove all whitespaces from strings comeing via controller from beginning and end of string
     @InitBinder

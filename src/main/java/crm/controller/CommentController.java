@@ -5,7 +5,6 @@ import crm.entity.Product;
 import crm.service.CommentService;
 import crm.service.ProductService;
 import crm.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,14 +27,17 @@ import java.util.Map;
 @RequestMapping("/comments")
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public CommentController(CommentService commentService, UserService userService, ProductService productService) {
+        this.commentService = commentService;
+        this.userService = userService;
+        this.productService = productService;
+    }
 
     // add an initbinder to remove all whitespaces from strings coming via controller
     // from beginning and end of the string

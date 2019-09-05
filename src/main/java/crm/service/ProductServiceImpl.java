@@ -2,7 +2,6 @@ package crm.service;
 
 import crm.dao.ProductDAO;
 import crm.entity.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductDAO productDAO;
+    private final ProductDAO productDAO;
+
+    public ProductServiceImpl(ProductDAO productDAO) {
+        this.productDAO = productDAO;
+    }
 
     @Override
     @Transactional

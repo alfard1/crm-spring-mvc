@@ -2,7 +2,6 @@ package crm.service;
 
 import crm.dao.CommentDAO;
 import crm.entity.Comment;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
-    private CommentDAO commentDAO;
+    private final CommentDAO commentDAO;
+
+    public CommentServiceImpl(CommentDAO commentDAO) {
+        this.commentDAO = commentDAO;
+    }
 
     @Override
     @Transactional
