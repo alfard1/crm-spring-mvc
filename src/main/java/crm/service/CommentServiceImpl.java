@@ -24,9 +24,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void saveComment(Comment comment) {
-        commentDAO.saveComment(comment);
+    public void newComment(Comment comment) {
+        commentDAO.newComment(comment);
     }
+
+    @Override
+    @Transactional
+    public void updateComment(Comment comment) {
+        commentDAO.updateComment(comment);
+    }
+
 
     @Override
     @Transactional

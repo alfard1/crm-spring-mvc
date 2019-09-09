@@ -2,6 +2,7 @@ package crm.controller;
 
 import crm.entity.Comment;
 import crm.entity.Product;
+import crm.entity.User;
 import crm.service.CommentService;
 import crm.service.ProductService;
 import crm.service.UserService;
@@ -63,9 +64,7 @@ public class CommentController {
 
         // 1st String is an Entity object name, 2nd String will be shown online
         Map<String, String> productNamesList = new HashMap<>();
-
         List<Product> allProducts = productService.getProducts();
-
         if (!allProducts.isEmpty()) {
             for (Product tempProduct : allProducts) productNamesList.put(tempProduct.getName(), tempProduct.getName());
         } else return null;
@@ -74,21 +73,8 @@ public class CommentController {
 
     @GetMapping("/list")
     public String listComments(Model model) {
-
         List<Comment> comments = commentService.getComments();
         model.addAttribute("comments", comments);
-
-        // TEST FOR DEBUGGING: printing all comments in the console
-		/*
-			if (comments.isEmpty()) { System.out.println("comments == null "); }
-			else { System.out.println("comments is NOT null");
-				for(Comment tempComment : comments) {
-					System.out.println("# Comment Id = " + tempComment.getId());
-					System.out.println("   >>> tempComment = " + tempComment);
-				}
-			}
-		*/
-
         return "comments";
     }
 
@@ -116,7 +102,7 @@ public class CommentController {
 
         // step 2 - get User Name and User Id from the session
         String tempUserName = getCurrentUserName();
-        crm.entity.User existing = userService.findByUserName(tempUserName);
+        User existing = userService.findByUserName(tempUserName);
         comment.setUserId(existing.getId());
 
         // step 3 - take productId from the form
@@ -149,7 +135,7 @@ public class CommentController {
             comment.setCreated(onCreate());
             comment.setLastUpdate(onUpdate());
             comment.setProduct(tempProduct);
-            commentService.saveComment(comment);
+            commentService.newComment(comment);
             return "redirect:/comments/list";
         }
     }
@@ -193,7 +179,7 @@ public class CommentController {
         // step 3 - preview for comment before saving it & save
         if (bindingResult.hasErrors()) return "comment-update-form";
         else {
-            commentService.saveComment(comment);
+            commentService.updateComment(comment);
             return "redirect:/comments/list";
         }
     }
@@ -208,25 +194,4 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
     }
-
-    /*
-    Long getCurrentUserId() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-
-        String id = null;
-        if (authentication != null)
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                id = ((UserDetails) authentication.getPrincipal()).getUsername();
-            } else if (authentication.getPrincipal() instanceof String) {
-                id = (String) authentication.getPrincipal();
-            }
-
-        try {
-            return Long.valueOf(id != null ? id : "1"); //anonymoususer
-        } catch (NumberFormatException e) {
-            return 1L;
-        }
-    }
-    */
 }

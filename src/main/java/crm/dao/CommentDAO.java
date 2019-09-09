@@ -8,7 +8,9 @@ public interface CommentDAO {
 
     List<Comment> getComments();
 
-    void saveComment(Comment comment);
+    void newComment(Comment comment);
+
+    void updateComment(Comment comment);
 
     Comment getComment(int id);
 

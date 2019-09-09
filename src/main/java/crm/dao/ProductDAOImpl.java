@@ -1,97 +1,59 @@
 package crm.dao;
 
+import crm.entity.Comment;
 import crm.entity.Product;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
 public class ProductDAOImpl implements ProductDAO {
 
-    private final SessionFactory sessionFactory;
+    private final EntityManager entityManager;
 
-    public ProductDAOImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public ProductDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public List<Product> getProducts() {
-        Session currentSession = sessionFactory.getCurrentSession();
-        Query<Product> query = currentSession.createQuery("from Product order by name", Product.class);
-        return query.getResultList();
+        Query query = entityManager.createQuery("from Product order by name");
+        return (List<Product>) query.getResultList();
     }
 
     @Override
     public Product getProduct(int id) {
-
-        Session currentSession = sessionFactory.getCurrentSession();
-        Product tempProduct = new Product();
-
-        //TODO: I added @SuppressWarnings to temporary remove warnings, should add checking object before casting down
-        // discussion here: https://stackoverflow.com/questions/367626/how-do-i-fix-the-expression-of-type-list-needs-unchecked-conversion
-
-        @SuppressWarnings("unchecked")
-        List<Product> l = currentSession.createQuery(
-                "SELECT e FROM Product e JOIN FETCH e.comments where e.id=:productId").setParameter("productId", id)
-                .getResultList();
-
-        if (l.isEmpty()) {
-            @SuppressWarnings("unchecked")
-            List<Product> m = currentSession.createQuery(
-                    "SELECT e FROM Product e where e.id=:productId").setParameter("productId", id)
-                    .getResultList();
-            for (Product p : m) {
-                printResult(p); // TODO: remove this line and check adding comments for product without any comment
-                tempProduct = p;
-            }
-        } else {
-            for (Product p : l) {
-                printResult(p);
-                tempProduct = p;
-            }
-        }
-        return tempProduct;
-    }
-
-    private static void printResult(Object result) {
-        if (result == null) {
-            System.out.print("NULL");
-        } else if (result instanceof Object[]) {
-            Object[] row = (Object[]) result;
-            System.out.print("[");
-            for (Object o : row) {
-                printResult(o);
-            }
-            System.out.print("]");
-        } else if (result instanceof Long || result instanceof Double
-                || result instanceof String) {
-            System.out.print(result.getClass().getName() + ": " + result);
-        } else {
-            System.out.print(result);
-        }
-        System.out.println();
+        Product product = entityManager.find(Product.class, id);
+        return product;
     }
 
     @Override
     public void saveProduct(Product product) {
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(product);
+        Product dbProduct = entityManager.merge(product);
+        product.setId(dbProduct.getId());
     }
 
     @Override
     public void deleteProduct(int id) {
-        Session currentSession = sessionFactory.getCurrentSession();
-        Product product = getProduct(id);
-        currentSession.delete(product);
+        Product product = entityManager.find(Product.class, id);
+        List<Comment> comments = product.getComments();
+        if (!comments.isEmpty()) {
+            for (Comment tempComment : comments) {
+                Query query1 = entityManager.createQuery("delete from Comment where id=:theCommentId");
+                query1.setParameter("theCommentId", tempComment.getId());
+                query1.executeUpdate();
+            }
+        }
+        Query query2 = entityManager.createQuery("delete from Product where id=:theProductId");
+        query2.setParameter("theProductId", id);
+        query2.executeUpdate();
     }
 
     @Override
     public List<Product> findProduct(String tempProductName) {
-        Session currentSession = sessionFactory.getCurrentSession();
-        return (List<Product>) currentSession.createQuery(
+        return (List<Product>) entityManager.createQuery(
                 "SELECT e FROM Product e where e.name=:productName")
                 .setParameter("productName", tempProductName)
                 .getResultList();

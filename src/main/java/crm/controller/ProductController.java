@@ -31,22 +31,7 @@ public class ProductController {
 
     @GetMapping("/list")
     public String listProducts(Model model) {
-
         List<Product> products = productService.getProducts();
-
-        // TEST FOR DEBUGGING: printing all products in the console
-		/*
-			if (products.isEmpty()) { System.out.println("products == null "); }
-			else { System.out.println("products is NOT null");
-				for(Product tempProduct : products) {
-					System.out.println("# Product Id = " + tempProduct.getId());
-					System.out.println("# Product Name = " + tempProduct.getName());
-					System.out.println("# Product Comments = " + productService.getProduct(tempProduct.getId()).getComments());
-					System.out.println("   >>> tempProduct = " + productService.getProduct(tempProduct.getId()));
-				}
-			}
-		*/
-
         model.addAttribute("products", products);
         return "products";
     }

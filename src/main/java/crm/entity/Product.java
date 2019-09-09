@@ -3,8 +3,8 @@ package crm.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -21,8 +21,8 @@ public class Product {
     private String name;
 
     @NotNull(message = "is required")
-    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    private Set<Comment> comments = new HashSet<>();
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Product() {
     }
@@ -47,16 +47,20 @@ public class Product {
         this.name = name;
     }
 
-    public Set<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", name=" + name + ", \ncomments=" + comments + "]";
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", comments=" + comments +
+                '}';
     }
 }

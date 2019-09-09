@@ -1,31 +1,30 @@
 package crm.dao;
 
 import crm.entity.Role;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
-    private final SessionFactory sessionFactory;
+    private final EntityManager entityManager;
 
-    public RoleDaoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public RoleDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public Role findRoleByName(String roleName) {
-        Session currentSession = sessionFactory.getCurrentSession();
-        Query<Role> query = currentSession.createQuery("from Role where name=:roleName", Role.class);
-        query.setParameter("roleName", roleName);
-        Role role = null;
-        try {
-            role = query.getSingleResult();
-        } catch (Exception e) {
-            role = null;
+        Query query = entityManager.createQuery("from Role");
+        List<Role> roles = query.getResultList();
+        if (!roles.isEmpty()) {
+            for (Role tempRole : roles) {
+                if (tempRole.getName() == roleName) return tempRole;
+            }
         }
-        return role;
+        return null;
     }
 }

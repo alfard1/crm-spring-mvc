@@ -1,5 +1,6 @@
 package crm.controller;
 
+import crm.entity.User;
 import crm.service.UserService;
 import crm.user.CrmUser;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -52,7 +53,7 @@ public class RegistrationController {
         }
 
         // check the database if user already exists
-        crm.entity.User existing = userService.findByUserName(userName);
+        User existing = userService.findByUserName(userName);
         if (existing != null) {
             model.addAttribute("crmUser", new CrmUser());
             model.addAttribute("registrationError", "User name already exists.");

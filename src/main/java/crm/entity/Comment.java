@@ -20,7 +20,6 @@ public class Comment {
     private String commentDesc;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "user_id")

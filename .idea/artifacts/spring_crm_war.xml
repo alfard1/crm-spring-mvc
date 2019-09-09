@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="spring-crm:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>spring-crm</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="crm.spring.mvc-6.3.0.war">
+      <element id="artifact" artifact-name="spring-crm:war exploded" />
+    </root>
+  </artifact>
+</component>
