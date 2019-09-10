@@ -12,12 +12,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,16 +47,6 @@ public class CommentController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-    // add methods for setting dates (create and update product)
-    @PrePersist
-    protected static Date onCreate() {
-        return new Date();
-    }
-
-    @PreUpdate
-    protected static Date onUpdate() {
-        return new Date();
-    }
 
     @ModelAttribute("productNamesList")
     public Map<String, String> getProductNamesList() {
@@ -86,58 +75,46 @@ public class CommentController {
     }
 
     @PostMapping("/saveNewComment")
-    public String saveNewComment(
-            @ModelAttribute("comment") Comment comment,
-            ModelMap modelMap,
-            BindingResult bindingResult) {
+    public String saveNewComment(@ModelAttribute("comment") Comment comment,
+                                 ModelMap modelMap,
+                                 BindingResult bindingResult) {
 
-        // step 1 - validation - checking for empty comment
-        String tempCommentDesc = comment.getCommentDesc();
-        if (tempCommentDesc == null) {
-            modelMap.addAttribute("comment", comment);
-            modelMap.addAttribute("product", new Product());
-            modelMap.addAttribute("newCommentError", "Please write a comment.");
+        if (comment.getCommentDesc() == null) {
+            addValidationErrorToModel(modelMap, "Please write a comment.");
             return "comment-new-form";
         }
 
-        // step 2 - get User Name and User Id from the session
-        String tempUserName = getCurrentUserName();
-        User existing = userService.findByUserName(tempUserName);
-        comment.setUserId(existing.getId());
-
-        // step 3 - take productId from the form
-        // step 3.1 - in memory we have only name of the product, without product.id, let's take product name
-
-        String tempProductName = comment.getProduct().getName();
-        if (tempProductName == null) {
-            modelMap.addAttribute("comment", comment);
-            modelMap.addAttribute("product", new Product());
-            modelMap.addAttribute("newCommentError", "Please select product.");
+        String productName = comment.getProduct().getName();
+        if (productName == null) {
+            addValidationErrorToModel(modelMap, "Please select product.");
             return "comment-new-form";
-        } else {
-            modelMap.addAttribute("product.name", tempProductName);
         }
 
-        // step 3.2 - now, we can find productId
-        int tempProductId = 0;
-        List<Product> foundProducts = productService.findProducts(comment.getProduct().getName());
+        List<Product> foundProducts = productService.findProducts(productName);
         if (foundProducts.isEmpty()) {
-            modelMap.addAttribute("comment", comment);
-            modelMap.addAttribute("product", new Product());
-            modelMap.addAttribute("newCommentError", "Product doesn't exist in DB.");
+            addValidationErrorToModel(modelMap, "Product doesn't exist in DB.");
             return "comment-new-form";
-        } else for (Product p : foundProducts) tempProductId = p.getId();
-
-        Product tempProduct = productService.getProduct(tempProductId);
-
-        if (bindingResult.hasErrors()) return "comment-new-form";
-        else {
-            comment.setCreated(onCreate());
-            comment.setLastUpdate(onUpdate());
-            comment.setProduct(tempProduct);
-            commentService.newComment(comment);
-            return "redirect:/comments/list";
         }
+
+        if (bindingResult.hasErrors()) {
+            return "comment-new-form";
+        }
+
+        Date now = new Date();
+        User existingUser = userService.findByUserName(getCurrentUserName());
+        Product product = CollectionUtils.lastElement(foundProducts);
+        comment.setUserId(existingUser.getId());
+        comment.setCreated(now);
+        comment.setLastUpdate(now);
+        comment.setProduct(product);
+
+        commentService.newComment(comment);
+
+        return "redirect:/comments/list";
+    }
+
+    void addValidationErrorToModel(ModelMap modelMap, String errorMsg) {
+        modelMap.addAttribute("newCommentError", errorMsg);
     }
 
     @GetMapping("/showFormForUpdate")
@@ -167,7 +144,7 @@ public class CommentController {
         Comment oldComment = commentService.getComment(comment.getId());
 
         // step 1 - setting new date for .lastUpdate
-        comment.setLastUpdate(onUpdate());
+        comment.setLastUpdate(new Date());
 
         // step 2 - copying all missing data from oldComment to comment
         comment.setCreated(oldComment.getCreated());
