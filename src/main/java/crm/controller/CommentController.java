@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/comments")
@@ -47,17 +47,14 @@ public class CommentController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-
     @ModelAttribute("productNamesList")
     public Map<String, String> getProductNamesList() {
+        List<Product> products = productService.getProducts();
+        return productListToMap(products);
+    }
 
-        // 1st String is an Entity object name, 2nd String will be shown online
-        Map<String, String> productNamesList = new HashMap<>();
-        List<Product> allProducts = productService.getProducts();
-        if (!allProducts.isEmpty()) {
-            for (Product tempProduct : allProducts) productNamesList.put(tempProduct.getName(), tempProduct.getName());
-        } else return null;
-        return productNamesList;
+    private Map<String, String> productListToMap(List<Product> products) {
+        return products.stream().collect(Collectors.toMap(Product::getName, Product::getName));
     }
 
     @GetMapping("/list")
@@ -113,10 +110,6 @@ public class CommentController {
         return "redirect:/comments/list";
     }
 
-    void addValidationErrorToModel(ModelMap modelMap, String errorMsg) {
-        modelMap.addAttribute("newCommentError", errorMsg);
-    }
-
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("commentId") int id, @ModelAttribute("comment") Comment comment,
                                     Model model) {
@@ -129,36 +122,30 @@ public class CommentController {
     }
 
     @PostMapping("/saveUpdatedComment")
-    public String saveUpdatedComment(@Valid @ModelAttribute("comment") Comment comment, BindingResult bindingResult,
-                                     Model model) {
+    public String saveUpdatedComment(@Valid @ModelAttribute("comment") Comment comment,
+                                     BindingResult bindingResult,
+                                     ModelMap modelMap) {
 
-        // step 1 - validation - checking for empty comment
-        String tempCommentDesc = comment.getCommentDesc();
-        if (tempCommentDesc == null) {
-            model.addAttribute("comment", comment);
-            model.addAttribute("product", new Product());
-            model.addAttribute("updatedCommentError", "Please write a comment.");
+        if (comment.getCommentDesc() == null) {
+            addValidationErrorToModel(modelMap, "Please write a comment.");
             return "comment-update-form";
         }
 
+        if (bindingResult.hasErrors()) {
+            return "comment-update-form";
+        }
+
+        Date now = new Date();
         Comment oldComment = commentService.getComment(comment.getId());
 
-        // step 1 - setting new date for .lastUpdate
-        comment.setLastUpdate(new Date());
-
-        // step 2 - copying all missing data from oldComment to comment
-        comment.setCreated(oldComment.getCreated());
         comment.setUserId(oldComment.getUserId());
-        int tempProductId = oldComment.getProduct().getId();
-        Product tempProduct = productService.getProduct(tempProductId);
-        comment.setProduct(tempProduct);
+        comment.setCreated(oldComment.getCreated());
+        comment.setLastUpdate(now);
+        comment.setProduct(productService.getProduct(oldComment.getProduct().getId()));
 
-        // step 3 - preview for comment before saving it & save
-        if (bindingResult.hasErrors()) return "comment-update-form";
-        else {
-            commentService.updateComment(comment);
-            return "redirect:/comments/list";
-        }
+        commentService.updateComment(comment);
+
+        return "redirect:/comments/list";
     }
 
     @GetMapping("/delete")
@@ -170,5 +157,9 @@ public class CommentController {
     private String getCurrentUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();
+    }
+
+    private void addValidationErrorToModel(ModelMap modelMap, String errorMsg) {
+        modelMap.addAttribute("newCommentError", errorMsg);
     }
 }

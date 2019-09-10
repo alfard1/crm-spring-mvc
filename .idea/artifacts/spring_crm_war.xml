@@ -7,7 +7,7 @@
         <packaging>war</packaging>
       </options>
     </properties>
-    <root id="archive" name="crm.spring.mvc-6.3.0.war">
+    <root id="archive" name="crm.spring.mvc-6.3.1.war">
       <element id="artifact" artifact-name="spring-crm:war exploded" />
     </root>
   </artifact>
