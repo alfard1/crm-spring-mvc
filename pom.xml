@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>12</java.version>
-        <c3po.version>0.9.5.2</c3po.version>
+        <c3po.version>0.9.5.4</c3po.version>
     </properties>
 
     <dependencies>
